@@ -3,6 +3,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -50,7 +52,6 @@ export default function SignIn() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm({ mode: 'onChange' });
   const [res, setResult] = useState("");
-  
 
   const onSubmit = async(data)=>{
     const us = {
@@ -59,8 +60,9 @@ export default function SignIn() {
     };
 
      const result = await Axios.post('http://localhost/login/api/',us);
-     setResult(result.data);
+     setResult(result.data.message);
      document.getElementById("log").reset();
+     return result;
     }
 
   return (
@@ -74,37 +76,31 @@ export default function SignIn() {
           Sign in
         </Typography>
         <form id="log" className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2}>
-        <Grid item xs={12}>
-        <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                inputRef={register}
-                
-                autoComplete="email"
-              />
-              </Grid>
-              <Grid item xs={12}>
           <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                inputRef={register}
-                
-                autoComplete="current-password"
-              />
-              </Grid>
-              </Grid>
-                              
-             <p>{!res?"":"logged in successfully"}</p>
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            inputRef={register}
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            inputRef={register}
+            autoComplete="current-password"
+          />
+           <p>{!res?"":""+res}</p>
           
           <Button
             type="submit"
@@ -115,12 +111,7 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                
-              </Link>
-            </Grid>
+          <Grid container justify="flex-end">
             <Grid item>
               <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}

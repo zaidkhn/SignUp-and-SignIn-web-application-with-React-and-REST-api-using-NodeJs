@@ -59,40 +59,40 @@ app.post('/login/api', async (req, res) => {
     const { error } = loginValidation(req.body);
 
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.send({message:error.details[0].message});
   }
   const us = await user.findOne({
     email: req.body.email
   });
 
   if (!us) {
-    return res.status(400).send("email or password invalid");
+    return res.send({message:"email or password invalid"});
   }
 
   const validPass= await bcrypt.compare(req.body.pass,us.pass);
 
   if(!validPass){
-      return res.status(400).send('invalid pass');
+      return res.send({message:"invalid pass"});
   }
 
   const token = jwt.sign({
       _id:us._id
   },process.env.TOKEN_SECRET);
-  res.header('token',token).send(token);
+  res.header('token',token).send({t:token,message:"Logged in successfully....!!!!!"});
 });
 
 app.post("/register/api/", async (req, res) => {
   const { error } = registerValidation(req.body);
 
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.send({message:error.details[0].message});
   }
   const emailExist = await user.findOne({
     email: req.body.email,
   });
 
   if (emailExist) {
-    return res.status(400).send("email exist");
+    return res.send({message:"email exist"});
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -106,7 +106,7 @@ app.post("/register/api/", async (req, res) => {
   });
   try {
     const savedUser = await us.save();
-    res.send({user:us._id});
+    res.send({user:us._id,message:"Account created successfully"});
   } catch (err) {
     console.log(err);
   }

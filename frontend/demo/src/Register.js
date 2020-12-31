@@ -50,6 +50,7 @@ export default function SignUp() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm({ mode: 'onChange' });
   const [res, setResult] = useState("");
+  
 
   const onSubmit = async(data)=>{
     const us = {
@@ -58,10 +59,12 @@ export default function SignUp() {
       email: data.email,
       pass: data.password
     };
-
-     const result = await Axios.post('http://localhost/register/api/',us);
-    setResult(result.data.user);
+  
+    const result = await Axios.post('http://localhost/register/api/',us);
+    setResult(result.data.message);
+    console.log(result.data.message);
     document.getElementById("reg").reset();
+    return result;
     }
 
   return (
@@ -128,7 +131,7 @@ export default function SignUp() {
             </Grid>
             
           </Grid>
-          <p>{!res?"":"Account created successfully....!!!!"}</p>
+          <p>{!res?"":""+res}</p>
           <Button
             type="submit"
             fullWidth
